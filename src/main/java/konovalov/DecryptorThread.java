@@ -52,8 +52,13 @@ public class DecryptorThread extends Thread {
         String path = file.getAbsolutePath().replaceAll("\\.enc$", "");
         for (int i = 1; ; i++) {
             String number = i > 1 ? Integer.toString(i) : "";
-            String outPath = path.substring(0, path.lastIndexOf('.')) + number
-                    + path.substring(path.lastIndexOf('.'));
+            String outPath;
+            if (new File(path).isFile()) {
+                outPath = path.substring(0, path.lastIndexOf('.')) + number
+                        + path.substring(path.lastIndexOf('.'));
+            } else {
+                outPath = path + number;
+            }
             if (!new File(outPath).exists()) {
                 return outPath;
             }
