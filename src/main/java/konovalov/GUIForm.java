@@ -1,4 +1,6 @@
-import net.lingala.zip4j.core.ZipFile;
+package konovalov;
+
+import net.lingala.zip4j.ZipFile;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +18,8 @@ public class GUIForm {
 
     private final String encryptAction = "Расшифровать";
     private final String decryptAction = "Зашифровать";
+
+    static char[] password;
 
     public GUIForm() {
 
@@ -97,11 +101,7 @@ public class GUIForm {
                 if (selectedFile == null) {
                     return;
                 }
-                String password = JOptionPane.showInputDialog("Введите пароль:");
-                if (password == null || password.length() == 0) {
-                    showWarning("Пароль не указан!");
-                    return;
-                }
+                password = JOptionPane.showInputDialog("Введите пароль:").toCharArray();
                 if (encryptedFileSelected) {
                     decryptFile(password);
                 } else {
@@ -120,17 +120,15 @@ public class GUIForm {
         actionButton.setEnabled(enabled);
     }
 
-    private void encryptFile(String password) {
+    private void encryptFile(char[] password) {
         EncryptorThread thread = new EncryptorThread(this);
         thread.setFile(selectedFile);
-        thread.setPassword(password);
         thread.start();
     }
 
-    private void decryptFile(String password) {
+    private void decryptFile(char[] password) {
         DecryptorThread thread = new DecryptorThread(this);
         thread.setFile(selectedFile);
-        thread.setPassword(password);
         thread.start();
     }
 
@@ -154,11 +152,7 @@ public class GUIForm {
         actionButton.setVisible(true);
     }
 
-    public void showWarning(String message) {
-        JOptionPane.showMessageDialog(rootPanel, message,
-                "Ошибка", JOptionPane.WARNING_MESSAGE);
-    }
-    public void showFinished(){
+    public void showFinished() {
         JOptionPane.showMessageDialog(rootPanel,
                 encryptedFileSelected ?
                         "Расшифровка завершена" :

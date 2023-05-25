@@ -1,3 +1,5 @@
+package konovalov;
+
 import javax.swing.*;
 
 public class Main {
